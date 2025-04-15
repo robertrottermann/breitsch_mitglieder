@@ -1,7 +1,7 @@
 
 # 🐘 Run Odoo 18 Enterprise Locally with Docker Compose
 
-This guide walks you through running a local clone of your Odoo 18 Enterprise backup using Docker Compose.
+This guide walks you through running a local clone of your Odoo 18 Enterprise backup using Docker Compose — now including secure password reset for users.
 
 ---
 
@@ -11,6 +11,10 @@ This guide walks you through running a local clone of your Odoo 18 Enterprise ba
 - Docker & Docker Compose installed
 - A valid Odoo Enterprise GitHub account (to clone the enterprise repo)
 - Your backup `.zip` file downloaded from https://www.odoo.com/fr_FR/my/databases
+- Python with `passlib` installed (for password hashing):
+  ```bash
+  pip install passlib
+  ```
 
 ---
 
@@ -23,7 +27,9 @@ sudo adduser breitsch
 sudo usermod -aG docker breitsch
 su - breitsch
 ```
-PW:breitsch@99
+
+Password suggestion: `breitsch@99`
+
 ---
 
 ## 📁 Step 2: Prepare Local Project Structure
@@ -136,7 +142,7 @@ docker compose up -d db
 Import the SQL dump:
 
 ```bash
-cat backup/dump.sql | docker exec -i $(docker ps -qf "name=mitglieder_db") psql -U odoo -d odoo
+docker exec -i mitglieder-db-1 psql -U odoo -d odoo < backup/dump.sql
 ```
 
 Copy the filestore:
@@ -148,15 +154,46 @@ cp -r backup/filestore/* ./filestore/
 
 ---
 
-## 🚀 Step 8: Launch Odoo
+## 🔐 Step 8: Reset User Passwords (Securely)
 
-Start the full stack:
+Install `passlib` if not already:
+
+```bash
+pip install passlib
+```
+
+Generate a hashed password:
+
+```bash
+python3 -c "from passlib.context import CryptContext; print(CryptContext(schemes=['pbkdf2_sha512']).hash('robert123'))"
+```
+
+Update the user in PostgreSQL:
+
+```bash
+docker exec -it mitglieder-db-1 psql -U odoo -d odoo
+```
+
+Then in the SQL prompt:
+
+```sql
+UPDATE res_users SET password = '<HASH>' WHERE login = 'robert@redo2oo.ch';
+\q
+```
+
+Replace `<HASH>` with the actual output from the Python script.
+
+✅ You can also use the provided script `reset_multiple_odoo_passwords.sh` to reset multiple users at once.
+
+---
+
+## 🚀 Step 9: Launch Odoo
 
 ```bash
 docker compose up -d
 ```
 
-Then open in your browser:
+Open in your browser:
 
 ```
 http://localhost:8069
@@ -168,12 +205,9 @@ http://localhost:8069
 
 - All data is local, safe to test freely.
 - Use `docker compose down` to stop everything.
-- Use `docker compose logs -f` to watch logs.
-- If port 8069 is busy, change it in `docker-compose.yaml`.
+- Use `docker compose logs -f` to monitor.
+- Change port 8069 if needed in `docker-compose.yaml`.
 
 ---
 
-Let me know if you'd like to add:
-- PgAdmin or Adminer
-- Mailhog
-- Auto backup jobs
+Let me know if you want a copy of the reset script or help with HTTPS, email, or backups.
