@@ -1,3 +1,25 @@
+# bill = QRBill(
+#     account="CH82 3002 4016 6052 9450 8",  # Creditor's IBAN
+#     creditor={
+#         "name": "Quartierzentrum Breitsch-Träff",
+#         "street": "Breitenrainplatz 27",
+#         "pcode": "3014",
+#         "city": "Bern",
+#         "country": "CH"
+#     },
+#     debtor={
+#         "name": "Uherkovich Henrik P.1a",
+#         "street": "Monbijoustrasse 20",
+#         "pcode": "3011",
+#         "city": "Bern",
+#         "country": "CH"
+#     },
+#     amount="150.50",
+#     currency="CHF",
+#     reference="21 00000 00003 13947 14300 09017",
+#     additional_info="Invoice 2024-045 - Web Development Services"
+# )
+
 import os
 import csv
 import argparse
@@ -15,13 +37,13 @@ QR_API_URL = "https://www.codecrete.net/qrbill-api/bill/image"
 DEBUG_MAX = 5  # <--- HARD LIMIT FOR TESTING
 
 CREDITOR_INFO = {
-    "name": "Breitschträff",
-    "street": "Optingenstr",
-    "houseNo": "12",
-    "postalCode": "3013",
+    "name": "Quartierzentrum Breitsch-Träff",
+    "street": "Breitenrainplatz",
+    "houseNo": "27",
+    "postalCode": "3014",
     "town": "Bern",
     "countryCode": "CH",
-    "iban": "CH4431999123000889012",
+    "iban": "H82 3002 4016 6052 9450 8",
     "reference": "210000000003139471430009017",
 }
 
