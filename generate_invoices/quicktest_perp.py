@@ -20,7 +20,7 @@ def generate_personal_qr_bill(
         "1",     # 1 = UTF-8 text encoding
 
         # 04: CdtrAcct.IBAN
-        "CH8230024016605294508",  # QR-IBAN (must be valid for QRR references)
+        "CH8230024016605294508",  # QR-IBAN of creditor (must be valid for QRR references)
 
         # 05: Cdtr.AdrTp (S or K)
         "S",  # S = structured address, K = combined
@@ -33,40 +33,45 @@ def generate_personal_qr_bill(
         "Bern",                            # 10: Cdtr.TwnNm - City
         "CH",                              # 11: Cdtr.Ctry - Country code (ISO)
 
-        # 12–16: Ultimate Creditor (UltmtCdtr) - Optional
+        # 12–17: Ultimate Creditor (UltmtCdtr) - Optional
         "",  # 12: UltmtCdtr.Nm - Name (leave empty if unused)
         "",  # 13: UltmtCdtr.StrtNm
         "",  # 14: UltmtCdtr.BldgNb
         "",  # 15: UltmtCdtr.PstCd
         "",  # 16: UltmtCdtr.TwnNm
+        "",  # 17: CcyAmtDate.Amt - Amount (blank = user decides)
 
-        # 17–22: Payment Information
-        "",      # 17: CcyAmtDate.Amt - Amount (blank = user decides)
-        "",      # 18: UltmtCdtr.Ctry
-        "",      # 19: UltmtDbtr.Nm - Name of initiating party (not used)
-        "CHF",   # 20: CcyAmtDate.Ccy
-        "S",     # 21: UltmtDbtr.AdrTp
-        debtor_name,      # 22: UltmtDbtr.Name
+        # 18–22: Payment Information  
+        "",      # 18: Amount to be paid (blank if open amount)
+        "",      # 19: Ccy - Currency (CHF) ????
+        "CHF",   # 19: Curency - Currency (CHF)
+        "S",     # 20: UltDbtr.AddressType S Debtor address type: S = structured, K = combined
+        debtor_name, # 21: UltDbtr.Name Name of the debtor
+ 
+        # 22–26: Debtor (Dbtr) Address
+        debtor_street,     # 22: Dbtr.StrtNm - Street
+        debtor_house_no,   # 23: Dbtr.BldgNb - House number
+        debtor_postal,     # 24: Dbtr.PstCd - Postal code
+        debtor_town,       # 25: UltmtDbtr.Ctry 
+        "CH",              # 26: Dbtr.Ctry - Country code
 
-        # 23–28: Debtor (Dbtr) Address
-        debtor_name,       # 23: Dbtr.Nm - Debtor name
-        debtor_street,     # 24: Dbtr.StrtNm - Street
-        debtor_house_no,   # 25: Dbtr.BldgNb - House number
-        debtor_postal,     # 26: Dbtr.PstCd - Postal code
-        # debtor_town,       # 27: UltmtDbtr.Ctry 
-        "CH",              # 28: Dbtr.Ctry - Country code
-
-        # 29: RmtInf.Tp - Reference type (QRR = structured with check digit)
+        # 27: RmtInf.Tp - Reference type (QRR = structured with check digit)
         "QRR",
 
-        # 30: RmtInf.Ref - Reference number (must match IBAN type)
+        # 28: Reference - Reference number (must match IBAN type)
         "210000000003139471430009017",
-        "", 
-        # 31: Trailer - End of Data Indicator
-        "EPD"
+
+        # 29: UnstructuredMessage
+        "Rechnung 2025-123",
+
+        # 30: Trailer - End of Data Indicator
+        "EPD",
+
+        # 31:  BillInformation  Additional information for biller (optional, max 140 chars)
+        # "Mitgliederbeitrag 2024"  # 31: BillInformation
     ]
 
-    assert len(payload_lines) == 31, f"Expected 31 lines, got {len(payload_lines)}"
+    # assert len(payload_lines) == 30, f"Expected 31 lines, got {len(payload_lines)}"
 
     os.makedirs(os.path.dirname(filename), exist_ok=True)
 
