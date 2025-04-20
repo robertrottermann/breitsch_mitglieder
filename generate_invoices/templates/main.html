@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <style>
+    @page { margin: 0; size: A4; }
+    .page {
+      display: flex;
+      flex-direction: column;
+      height: 297mm; /* A4 height */
+      padding: 20mm 3mm 4mm 3mm;
+      box-sizing: border-box;
+      border: 1px solid red;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+      font-size: 12pt;
+      background: #fff;
+    }
+
+    .letter {
+      background-color: #e8f0ff; /* debug */
+      border: 1px dashed #007bff; /* debug */
+      padding: 5mm;
+    }
+
+    .payment-section {
+      /* position: absolute; */
+      left: 3mm;
+      right: 3mm;
+      bottom: 4mm;
+      height: 105mm;
+      padding-top: 5mm;
+      background-color: #fff3f3; /* debug */
+      border: 1px dashed #ff4d4d; /* debug */
+      border-top: 0.75pt solid #000;
+      z-index: 2;
+    }
+
+    .perforation {
+      border-top: 1px dashed #666;
+      margin: 5mm 0;
+      position: relative;
+    }
+
+    .perforation::before {
+      content: "✄ ✄ ✄ ✄ ✄ ✄ ✄ ✄ ✄ ✄ ✄ ✄";
+      position: absolute;
+      top: -8px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: white;
+      padding: 0 10px;
+      color: #666;
+      font-size: 12pt;
+    }
+
+    .payment-layout {
+      display: flex;
+      align-items: flex-start;
+      gap: 5mm;
+    }
+
+    .monospace {
+      font-family: 'Courier New', monospace;
+      font-size: 9pt;
+    }
+
+    .qr-code {
+      width: 46mm;
+      height: 46mm;
+      border: 0.75pt solid #000;
+      flex-shrink: 0;
+    }
+
+    .amount-field {
+      border-bottom: 1px solid #000;
+      width: 40mm;
+      display: inline-block;
+    }
+
+    .warning {
+      font-size: 8pt;
+      color: #666;
+      margin-top: 3mm;
+      text-align: center;
+    }
+
+    .split-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8mm;
+    }
+    .spacer {
+      flex-grow: 1; /* pushes .payment-section to bottom */
+    }
+
+  </style>
+</head>
+<body>
+  <div class="page">
+    <!-- Letter Section -->
+    <div class="letter">
+      {% include "letter.html" %}
+    </div>
+
+    <div class="spacer"></div>
+
+    <!-- Payment Section -->
+    <div class="payment-section">
+      <div class="perforation"></div>
+      {% include "payslip.html" %}
+    </div>
+  </div>
+</body>
+
+</html>

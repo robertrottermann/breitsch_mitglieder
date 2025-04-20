@@ -1,0 +1,42 @@
+<div class="split-layout">
+    <!-- Receipt -->
+    <div class="monospace">
+      <strong>Empfangsschein</strong><br>
+      Konto / Zahlbar an<br>
+      {{ creditor.iban }}<br>
+      {{ creditor.name }}<br>
+      {{ creditor.street }} {{ creditor.houseNo }}<br>
+      {{ creditor.postalCode }} {{ creditor.town }}<br><br>
+      Referenz<br>{{ member.reference }}<br><br>
+      Zahlbar durch<br>
+      {{ member.name_full }}<br>
+      {{ member.address_line }}<br>
+      {{ member.city_line }}<br><br>
+      Währung: CHF Betrag: <span class="amount-field"></span>
+    </div>
+  
+    <!-- Payment Part -->
+    <div>
+      <strong>Zahlteil</strong><br>
+      <div class="payment-layout">
+        <img src="qr_{{ qr_index }}.png" class="qr-code">
+        <div class="monospace">
+          Konto / Zahlbar an<br>
+          {{ creditor.iban }}<br>
+          {{ creditor.name }}<br>
+          {{ creditor.street }} {{ creditor.houseNo }}<br>
+          {{ creditor.postalCode }} {{ creditor.town }}<br><br>
+          Referenz<br>{{ member.reference }}<br><br>
+          Zusätzliche Informationen<br>
+          Mitgliederbeitrag {{ current_year }}<br><br>
+          Zahlbar durch<br>
+          {{ member.name_full }}<br>
+          {{ member.address_line }}<br>
+          {{ member.city_line }}<br><br>
+          Währung: CHF Betrag: <span class="amount-field"></span>
+        </div>
+      </div>
+      <div class="warning">Nicht perforieren oder lochen</div>
+    </div>
+  </div>
+  
