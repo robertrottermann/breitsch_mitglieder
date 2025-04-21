@@ -27,8 +27,10 @@
           {{ creditor.street }} {{ creditor.houseNo }}<br>
           {{ creditor.postalCode }} {{ creditor.town }}<br><br>
           Referenz<br>{{ member.reference }}<br><br>
-          Zusätzliche Informationen<br>
-          Mitgliederbeitrag {{ current_year }}<br><br>
+          {% if payment_info %}
+            Zusätzliche Informationen<br>
+            {{ payment_info }}<br><br>
+          {% endif %}<br><br>
           Zahlbar durch<br>
           {{ member.name_full }}<br>
           {{ member.address_line }}<br>

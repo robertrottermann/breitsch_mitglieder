@@ -1,11 +1,46 @@
-<div class="letter">
-    <p><strong>{{ member.name_full }}</strong><br>
-    {{ member.address_line }}<br>
-    {{ member.city_line }}</p>
+<div style="display: flex; justify-content: center; align-items: center; margin-bottom:10px;margin-top: -20mm;">
+    <span style="font-weight: bold; color: #d00000; font-size: 40px; margin-right: 20px;">BREITSCH</span>
+    <img src="breitsch_url.jpg" alt="QR Code" style="height: 60px; margin: 0 20px;">
+    <span style="font-weight: bold; color: #d00000; font-size: 40px; margin-left: 20px;">TRÄFF</span>
+</div>
+<div style="text-align: center; color: #000; font-size: 20px; font-weight: bold; margin-bottom: 10px;">
+    Wir ermöglichen Begegnungen
+</div>
   
-    <p>Sehr geehrte/r {{ member.name_full }},</p>
+<!-- Spacer to push address block down to window position -->
+<div class="window-spacer" style="height: 20mm;"></div>
+
+<div class="letter">
+
+    <div class="address-block" style="margin-left: 100mm; width: 90mm; line-height: 1.4; font-size: 12pt;">
+        <p style="margin: 0; padding: 0;">
+            <strong>{{ member.name_full }}</strong><br>
+            {{ member.address_line }}<br>
+            {{ member.city_line }}
+        </p>
+    </div>
+
+    <div style="margin-top: 20mm;"></div>
+  
+    <div style="margin-bottom: 8mm;">
+        Bern, April 2025
+    </div>
+
+
+    <strong>Liebe/r {{ member.name_full }},</strong><br>
+    <p></p>
     <p>Wir danken Ihnen herzlich für Ihre Mitgliedschaft als <strong>{{ member.membership_type }}</strong>.</p>
     <p>Bitte überweisen Sie Ihren Jahresbeitrag für {{ current_year }} mit dem beiliegenden Einzahlungsschein.</p>
+    <br>
     <p>Freundliche Grüsse<br>Quartierzentrum Breitsch-Träff</p>
+
+    <p></p>
+
+    <strong>Mitgliederbeitrag / Spende </strong><br>
+    <div style="margin-left: 50px;">
+        Einzelmitglied 40.-- CHF/Jahr
+        <br>Familienmitglied 60.-- CHF/Jahr
+        <br>Gruppenmitglied 100.-- CHF/Jahr
+    </div>
 </div>
   

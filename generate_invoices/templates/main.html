@@ -10,7 +10,7 @@
       height: 297mm; /* A4 height */
       padding: 20mm 3mm 4mm 3mm;
       box-sizing: border-box;
-      border: 1px solid red;
+      /* border: 1px solid red; debug */
     }
 
     body {
@@ -22,8 +22,8 @@
     }
 
     .letter {
-      background-color: #e8f0ff; /* debug */
-      border: 1px dashed #007bff; /* debug */
+      /* background-color: #e8f0ff;  debug */
+      /* border: 1px dashed #007bff; debug */
       padding: 5mm;
     }
 
@@ -34,8 +34,8 @@
       bottom: 4mm;
       height: 105mm;
       padding-top: 5mm;
-      background-color: #fff3f3; /* debug */
-      border: 1px dashed #ff4d4d; /* debug */
+      /* background-color: #fff3f3; debug */
+      /* border: 1px dashed #ff4d4d; debug */
       border-top: 0.75pt solid #000;
       z-index: 2;
     }
@@ -80,6 +80,7 @@
       border-bottom: 1px solid #000;
       width: 40mm;
       display: inline-block;
+      margin-top: 15px;
     }
 
     .warning {
@@ -96,6 +97,16 @@
     }
     .spacer {
       flex-grow: 1; /* pushes .payment-section to bottom */
+    }
+    .address-block {
+        margin-left: 20mm;
+        width: 90mm;
+        line-height: 1.4;
+        font-size: 12pt;
+    }
+    .address-block p {
+        margin: 0;
+        padding: 0;
     }
 
   </style>

@@ -1,94 +1,77 @@
-# bill = QRBill(
-#     account="CH82 3002 4016 6052 9450 8",  # Creditor's IBAN
-#     creditor={
-#         "name": "Quartierzentrum Breitsch-Träff",
-#         "street": "Breitenrainplatz 27",
-#         "pcode": "3014",
-#         "city": "Bern",
-#         "country": "CH"
-#     },
-#     debtor={
-#         "name": "Uherkovich Henrik P.1a",
-#         "street": "Monbijoustrasse 20",
-#         "pcode": "3011",
-#         "city": "Bern",
-#         "country": "CH"
-#     },
-#     amount="150.50",
-#     currency="CHF",
-#     reference="21 00000 00003 13947 14300 09017",
-#     additional_info="Invoice 2024-045 - Web Development Services"
-# )
+# -*- coding: utf-8 -*-
 import segno
 import os
 
-# payload_lines = [
-#     # ... (header remains same)
-#     "CH8230024016605294508",          # IBAN without spaces
-#     "K",                              # Address type: Combined elements
-    
-#     # --- Creditor Section ---        # Lines 6-11
-#     "Quartierzentrum Breitsch-Träff",
-#     "Breitenrainplatz 27",            # Combined street + number
-#     "",                               # Leave empty for 'K' type
-#     "",                               # Leave empty for 'K' type
-#     "",                               # Leave empty for 'K' type
-#     "CH",
-    
-#     # --- Ultimate Creditor ---       # Lines 12-16 (all empty)
-#     "", "", "", "", "",
-    
-#     # --- Debtor Section ---          # Lines 17-22
-#     "Uherkovich Henrik P.1a",
-#     "Monbijoustrasse 20",             # Combined street + number
-#     "",                               # Leave empty for 'K' type
-#     "",                               # Leave empty for 'K' type
-#     "",                               # Leave empty for 'K' type
-#     "CH",
-    
-#     # --- Payment Details ---         # Lines 23-28
-#     "199.95",
-#     "CHF",                            # Must be CHF/EUR
-#     "21000000000313947143000901",     # Reference without spaces
-#     "Abonnement für 2020",
-#     "",                               # Trailer
-#     "EPD"
-# ]
 
-
-def generate_valid_qr_bill(filename):
+def generate_personal_qr_bill(
+    filename,
+    debtor_name="",
+    debtor_street="",
+    debtor_house_no="",
+    debtor_postal="",
+    debtor_town=""
+):
     payload_lines = [
-        "SPC",                          # 01: QR type
-        "0200",                         # 02: Version
-        "1",                            # 03: Coding: UTF-8
-        "CH8230024016605294508",        # 04: QR-IBAN (NO SPACES!)
-        "K",                            # 05: Address type (structured)
-        # --- Creditor Section ---
-        "Quartierzentrum Breitsch-Träff",  # 06: Name
-        "Breitenrainplatz 27",          # 07: Street + number (COMBINED)
-        "",                             # 08: House number (EMPTY for structured)
-        "3014",                         # 09: ZIP
-        "Bern",                         # 10: City
-        "CH",                           # 11: Country
-        # --- Ultimate Creditor (empty) ---
-        "", "", "", "", "",
-        # --- Debtor Section ---
-        "Uherkovich Henrik P.1a",       # 17: Name
-        "Monbijoustrasse 20",           # 18: Street + number (COMBINED)
-        "",                             # 19: House number (EMPTY)
-        "3011",                         # 20: ZIP
-        "Bern",                         # 21: City
-        "CH",                           # 22: Country
-        # --- Payment Details ---
-        "199.95",                       # 23: Amount
-        "CHF",                          # 24: Currency
-        "21000000000313947143000901",   # 25: Reference (NO SPACES!)
-        "Abonnement für 2020",          # 26: Unstructured message
-        "",                             # 27: Trailer
-        "", "", "",                      # 28-30: Alternative procedures
-        "EPD"                           # 31: End marker
-    ]
+        # 01: Header - Identification of QR Code Type
+        "SPC",  # Identification (Swiss Payments Code)
 
+        # 02: Header - Version
+        "0200",  # Version (02.00)
+
+        # 03: Header - Coding Type
+        "1",     # 1 = UTF-8 text encoding
+
+        # 04: CdtrAcct.IBAN
+        "CH8230024016605294508",  # QR-IBAN of creditor (must be valid for QRR references)
+
+        # 05: Cdtr.AdrTp (S or K)
+        "S",  # S = structured address, K = combined
+
+        # 06–11: Creditor (Cdtr) Address
+        "Quartierzentrum Breitsch-Träff",  # 06: Cdtr.Nm - Creditor name
+        "Breitenrainplatz",                # 07: Cdtr.StrtNm - Street name
+        "27",                              # 08: Cdtr.BldgNb - House number
+        "3013",                            # 09: Cdtr.PstCd - Postal code
+        "Bern",                            # 10: Cdtr.TwnNm - City
+        "CH",                              # 11: Cdtr.Ctry - Country code (ISO)
+
+        # 12–17: Ultimate Creditor (UltmtCdtr) - Optional
+        "",  # 12: UltmtCdtr.Nm - Name (leave empty if unused)
+        "",  # 13: UltmtCdtr.StrtNm
+        "",  # 14: UltmtCdtr.BldgNb
+        "",  # 15: UltmtCdtr.PstCd
+        "",  # 16: UltmtCdtr.TwnNm
+        "",  # 17: CcyAmtDate.Amt - Amount (blank = user decides)
+
+        # 18–22: Payment Information  
+        "",      # 18: Amount to be paid (blank if open amount)
+        "",      # 19: Ccy - Currency (CHF) ????
+        "CHF",   # 19: Curency - Currency (CHF)
+        "S",     # 20: UltDbtr.AddressType S Debtor address type: S = structured, K = combined
+        debtor_name, # 21: UltDbtr.Name Name of the debtor
+ 
+        # 22–26: Debtor (Dbtr) Address
+        debtor_street,     # 22: Dbtr.StrtNm - Street
+        debtor_house_no,   # 23: Dbtr.BldgNb - House number
+        debtor_postal,     # 24: Dbtr.PstCd - Postal code
+        debtor_town,       # 25: UltmtDbtr.Ctry 
+        "CH",              # 26: Dbtr.Ctry - Country code
+
+        # 27: RmtInf.Tp - Reference type (QRR = structured with check digit)
+        "QRR",
+
+        # 28: Reference - Reference number (must match IBAN type)
+        "210000000003139471430009017",
+
+        # 29: UnstructuredMessage
+        "Rechnung 2025-123",
+
+        # 30: Trailer - End of Data Indicator
+        "EPD",
+
+        # 31:  BillInformation  Additional information for biller (optional, max 140 chars)
+        # "Mitgliederbeitrag 2024"  # 31: BillInformation
+    ]
     # Validate structure
     assert len(payload_lines) == 31, f"Expected 31 lines, got {len(payload_lines)}"
     
@@ -97,8 +80,17 @@ def generate_valid_qr_bill(filename):
     
     # Generate QR code
     payload = "\n".join(payload_lines)
-    qr = segno.make(payload, error='M')
+    qr = segno.make(payload.encode('utf-8'), error='M')
     qr.save(filename, scale=4)
     print(f"✅ QR code saved to {filename}")
 
-generate_valid_qr_bill("output/qr_bill_correct.png")
+
+if __name__ == "__main__":
+    generate_personal_qr_bill(
+        filename="output/qr_bill_robert_r.png",
+        debtor_name="Robert Rottermann",
+        debtor_street="Optingenstrasse",
+        debtor_house_no="12",
+        debtor_postal="3013",
+        debtor_town="Bern"
+    )
